@@ -2,4 +2,4 @@
 
 Play the game of tic tac toe with your choice of board size. (2 Players)
 
-<a href="https://vercel.com/happlesful/tictactoe">Click to play tic tac toe!</a>
+<a href="https://tictactoe-hazel-alpha.vercel.app" target="_blank">Click to play tic tac toe!</a>
