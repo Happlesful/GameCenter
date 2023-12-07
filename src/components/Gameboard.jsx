@@ -30,7 +30,8 @@ const Gameboard = (Props) => {
 
   const makeMove = (row, col) => {
     if (endGame || drawGame) return;
-    board[row][col] = currPlayerTurn;
+    if (board[row][col] === undefined) board[row][col] = currPlayerTurn;
+    else return;
     //make a shallow copy to update the changes or else it might not re-render
     setBoard([...board]);
     //check win after making a move on the board
