@@ -136,7 +136,7 @@ const Gameboard = (Props) => {
                   {row.map((item, colIndex) => {
                     return (
                       <span
-                        className="flex w-10 h-10 border-b-slate-300 outline outline-1 justify-center items-center"
+                        className="flex w-10 h-10 border-b-slate-300 outline outline-1 justify-center items-center text-xs"
                         key={colIndex}
                         onClick={() => makeMove(rowIndex, colIndex)}
                       >
