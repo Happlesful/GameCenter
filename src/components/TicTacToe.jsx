@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Gameboard } from "./index";
+import { TTTGameboard } from "./index";
 
 const TicTacToe = () => {
   const [boardSize, setBoardSize] = useState("");
@@ -76,7 +76,7 @@ const TicTacToe = () => {
       >
         Restart game
       </button>
-      <Gameboard
+      <TTTGameboard
         size={boardSize}
         player1={player1Symbol}
         player2={player2Symbol}
