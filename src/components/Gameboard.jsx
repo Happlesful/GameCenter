@@ -29,6 +29,7 @@ const Gameboard = (Props) => {
   };
 
   const makeMove = (row, col) => {
+    if (endGame || drawGame) return;
     board[row][col] = currPlayerTurn;
     //make a shallow copy to update the changes or else it might not re-render
     setBoard([...board]);
