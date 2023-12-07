@@ -19,6 +19,8 @@ const TicTacToe = () => {
             onChange={(e) => {
               if (e.target.value <= 5 && e.target.value >= 3)
                 setBoardSize(e.target.value);
+              else if (e.target.value > 5) setBoardSize(5);
+              else if (e.target.value < 3) setBoardSize(3);
             }}
             className="w-16 rounded-md ml-2 h-6 text-xs text-center text-black"
           />
@@ -29,7 +31,7 @@ const TicTacToe = () => {
             type="text"
             placeholder="P1 symbol"
             onChange={(e) => {
-              setPlayer1Symbol(e.target.value);
+              if (e.target.value.length <= 5) setPlayer1Symbol(e.target.value);
             }}
             className="w-16 rounded-md ml-2 h-6 text-xs text-center text-black"
           />
@@ -40,7 +42,7 @@ const TicTacToe = () => {
             type="text"
             placeholder="P2 symbol"
             onChange={(e) => {
-              setPlayer2Symbol(e.target.value);
+              if (e.target.value.length <= 5) setPlayer2Symbol(e.target.value);
             }}
             className="w-16 rounded-md ml-2 h-6 text-xs text-center text-black"
           />
