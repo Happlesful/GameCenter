@@ -69,7 +69,7 @@ const TicTacToe = () => {
   const gameWindow = (
     <>
       <button
-        className="translate-x-24 translate-y-4 rounded-md bg-indigo-200 text-slate-600 px-2 py-0.5 border-2 border-x-neutral-400 hover:bg-indigo-300 hover:border-neutral-500 hover:text-slate-900"
+        className="translate-x-24 translate-y-4 rounded-md bg-indigo-200 text-slate-600 px-2 py-0.5 border-2 border-neutral-400 hover:bg-indigo-300 hover:border-neutral-500 hover:text-slate-900 hover:scale-105"
         onClick={() => {
           setStartGame(false);
         }}

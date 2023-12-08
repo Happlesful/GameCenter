@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+//add glow upon clicking on the tile and red glow for not allowed
+
 const createBoard = (size) => {
   const newBoard = [];
   for (let i = 0; i < size; i++) {
@@ -128,7 +130,7 @@ const TTTGameboard = (Props) => {
           <p>Player 1 - {player1}</p>
           <p>Player 2 - {player2}</p>
         </span>
-        <p>Gameboard</p>
+        <p>Tic-Tac-Toe</p>
         <section>
           <span className="flex flex-row pt-2">
             {board.map((row, rowIndex) => {
@@ -137,7 +139,7 @@ const TTTGameboard = (Props) => {
                   {row.map((item, colIndex) => {
                     return (
                       <span
-                        className="flex w-10 h-10 border-b-slate-300 outline outline-1 justify-center items-center text-xs"
+                        className="flex w-10 h-10 outline-purple-300 outline outline-1 justify-center items-center text-xs"
                         key={colIndex}
                         onClick={() => makeMove(rowIndex, colIndex)}
                       >
@@ -151,9 +153,9 @@ const TTTGameboard = (Props) => {
           </span>
         </section>
       </div>
-      <span className="translate-y-7">
+      <span className="translate-y-5">
         {drawGame || endGame ? (
-          <span className="flex flex-col items-center rounded-lg px-2 py-1 border-2 border-stone-300 bg-cyan-700">
+          <span className="flex flex-col items-center rounded-lg px-2 border-2 border-slate-900 bg-indigo-300 text-black">
             <p>Game over!</p>
             {endGame ? (
               <p>{currPlayerTurn} wins!</p>
@@ -162,7 +164,7 @@ const TTTGameboard = (Props) => {
             )}
           </span>
         ) : (
-          <p className="flex flex-col items-center rounded-lg px-2 py-1 border-2 border-stone-400 bg-cyan-800">
+          <p className="flex flex-col items-center rounded-lg px-2 border-2 border-stone-200 bg-indigo-400 animate-pulse">
             {currPlayerTurn}'s turn
           </p>
         )}
