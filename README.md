@@ -6,4 +6,4 @@ Or play a game of 2048 here!
 
 Made using ReactJS and Tailwind CSS
 
-<a href="https://tictactoe-hazel-alpha.vercel.app" target="_blank">Click to play tic tac toe!</a>
+<a href="https://tictactoe-hazel-alpha.vercel.app" target="_blank">Click to play games here now!</a>
