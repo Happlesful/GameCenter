@@ -250,14 +250,17 @@ const TZFEGameboard = (Props) => {
     let touchEndY;
 
     const handleTouchStart = (e) => {
+      e.preventDefault();
       touchStartX = e.touches[0].cilentX;
       touchStartY = e.touches[0].cilentY;
     };
     const handleTouchMove = (e) => {
+      e.preventDefault();
       touchEndX = e.touches[0].cilentX;
       touchEndY = e.touches[0].cilentY;
     };
     const handleTouchEnd = (e) => {
+      e.preventDefault();
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
       //compare the changes in delta to determine the intended move
@@ -336,7 +339,7 @@ const TZFEGameboard = (Props) => {
   return (
     <div>
       <section className="flex flex-col items-center justify-center">
-        <span className="flex items-center justify-center outline outline-2 rounded-sm outline-teal-500 bg-slate-600 px-4 m-2">
+        <span className="flex items-center justify-center outline outline-2 rounded-sm text-gray-50 outline-teal-500 bg-slate-600 px-4 m-2">
           Score: {score[0]}
         </span>
         2048
