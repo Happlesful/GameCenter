@@ -1,5 +1,5 @@
 import "./App.css";
-import { Gameboard, TicTacToe } from "./components/index";
+import { TicTacToe, TwoZeroFourEight } from "./components/index";
 
 function App() {
   return (
@@ -9,6 +9,7 @@ function App() {
       h-screen w-screen dark:bg-slate-800 dark:text-white"
       >
         <TicTacToe />
+        <TwoZeroFourEight />
       </div>
     </div>
   );
