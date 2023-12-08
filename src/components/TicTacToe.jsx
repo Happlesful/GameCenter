@@ -15,7 +15,7 @@ const TicTacToe = () => {
           <p>Board size: </p>
           <input
             type="text"
-            placeholder="Board size"
+            placeholder="3"
             onChange={(e) => {
               if (e.target.value <= 5 && e.target.value >= 3)
                 setBoardSize(e.target.value);
@@ -29,7 +29,7 @@ const TicTacToe = () => {
           <p>Player 1 symbol: </p>
           <input
             type="text"
-            placeholder="P1 symbol"
+            placeholder="P1"
             onChange={(e) => {
               if (e.target.value.length <= 5) setPlayer1Symbol(e.target.value);
             }}
@@ -40,15 +40,15 @@ const TicTacToe = () => {
           <p>Player 2 symbol: </p>
           <input
             type="text"
-            placeholder="P2 symbol"
+            placeholder="P2"
             onChange={(e) => {
               if (e.target.value.length <= 5) setPlayer2Symbol(e.target.value);
             }}
             className="w-16 rounded-md ml-2 h-6 text-xs text-center text-black"
           />
         </span>
-        <p className="text-xss w-44">^Board size should be 3 to 5</p>
-        <p className="text-xss w-44 leading-4">
+        <p className="text-xxs w-44">^Board size should be 3 to 5</p>
+        <p className="text-xxs w-44 leading-4">
           ^Symbols should be &lt;= 5 characters
         </p>
         <button
