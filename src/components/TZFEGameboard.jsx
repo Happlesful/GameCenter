@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 const createGameBoard = (size) => {
-  //create a 4x4 gameboard intially (expand to up to 8x8)
   const newBoard = [];
   for (let i = 0; i < size; i++) {
     newBoard.push([...Array(size)]);
   }
   return newBoard;
 };
-
-//add colours and animations upon keyclick/ move made
 
 const TZFEGameboard = (Props) => {
   const { size } = Props;
@@ -18,6 +15,7 @@ const TZFEGameboard = (Props) => {
   const [checkEndGame, setCheckEndGame] = useState(false);
   const [begin2048, setBegin2048] = useState(true); //set to false to choose between 2 games
   const [processKey, setProcessKey] = useState(false);
+  const [score, setScore] = useState([0, 0]);
 
   //do not spawn new tiles if the move is illegal (i.e. all already at a side)
   const makeMoveUp = () => {
@@ -46,6 +44,7 @@ const TZFEGameboard = (Props) => {
         } else if (sum === currVal) {
           //add the 2 values and place them in their new positions
           column[position] = sum + currVal;
+          computeScore(currVal);
           setBoard([...board]);
           sum = 0;
           summed = 0;
@@ -92,6 +91,7 @@ const TZFEGameboard = (Props) => {
         } else if (sum === currVal) {
           //add the 2 values and place them in their new positions
           column[position] = sum + currVal;
+          computeScore(currVal);
           setBoard([...board]);
           sum = 0;
           summed = 0;
@@ -138,6 +138,7 @@ const TZFEGameboard = (Props) => {
         } else if (sum === currVal) {
           //add the 2 values and place them in their new positions
           board[position][r] = sum + currVal;
+          computeScore(currVal);
           setBoard([...board]);
           sum = 0;
           summed = 0;
@@ -184,6 +185,7 @@ const TZFEGameboard = (Props) => {
         } else if (sum === currVal) {
           //add the 2 values and place them in their new positions
           board[position][r] = sum + currVal;
+          computeScore(currVal);
           setBoard([...board]);
           sum = 0;
           summed = 0;
@@ -202,6 +204,12 @@ const TZFEGameboard = (Props) => {
         setBoard([...board]);
       }
     }
+  };
+
+  const computeScore = (value) => {
+    const newScore = Math.round(score[0] + Math.log(value ** 2) * 10);
+    score[0] = newScore;
+    setScore([...score]);
   };
 
   useEffect(() => {
@@ -224,7 +232,6 @@ const TZFEGameboard = (Props) => {
           //new object has to be created to trigger a re-render
           board[rowCol.xIndex][rowCol.yIndex] = value;
           setBoard([...board]);
-          console.log(board);
           checkGameEnd();
         }
       }
@@ -237,9 +244,59 @@ const TZFEGameboard = (Props) => {
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
 
+    let touchStartX;
+    let touchStartY;
+    let touchEndX;
+    let touchEndY;
+
+    const handleTouchStart = (e) => {
+      touchStartX = e.touches[0].cilentX;
+      touchStartY = e.touches[0].cilentY;
+    };
+    const handleTouchMove = (e) => {
+      touchEndX = e.touches[0].cilentX;
+      touchEndY = e.touches[0].cilentY;
+    };
+    const handleTouchEnd = (e) => {
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+      //compare the changes in delta to determine the intended move
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        //swiping horizontally
+        if (touchEndX > touchStartX) {
+          //swipe right
+          makeMoveRight();
+        } else {
+          //swipe left
+          makeMoveLeft();
+        }
+      } else {
+        //swiping vertically
+        if (touchEndY > touchStartY) {
+          //swipe up
+          makeMoveUp();
+        } else {
+          //swipe down
+          makeMoveDown();
+        }
+      }
+      const rowCol = chooseRandomBox();
+      const value = choose2or4();
+      //new object has to be created to trigger a re-render
+      board[rowCol.xIndex][rowCol.yIndex] = value;
+      setBoard([...board]);
+      checkGameEnd();
+    };
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleTouchEnd);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
@@ -253,10 +310,6 @@ const TZFEGameboard = (Props) => {
       xIndex = Math.round(roll / boardSize) % boardSize;
       yIndex = roll % boardSize;
     }
-    console.log("row: ");
-    console.log(yIndex);
-    console.log("col: ");
-    console.log(xIndex);
     return { xIndex, yIndex };
   };
 
@@ -283,6 +336,9 @@ const TZFEGameboard = (Props) => {
   return (
     <div>
       <section className="flex flex-col items-center justify-center">
+        <span className="flex items-center justify-center outline outline-2 rounded-sm outline-teal-500 bg-slate-600 px-4 m-2">
+          Score: {score[0]}
+        </span>
         2048
         <span className="flex flex-row pt-2">
           {board.map((row, rowIndex) => {
