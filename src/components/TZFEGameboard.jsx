@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ArrowLeft, ArrowRight, ArrowDown, ArrowUp } from "react-feather";
 
 const createGameBoard = (size) => {
   const newBoard = [];
@@ -12,13 +13,28 @@ const TZFEGameboard = (Props) => {
   const { size } = Props;
   const [boardSize, setBoardSize] = useState(parseInt(size));
   const [board, setBoard] = useState(createGameBoard(boardSize));
-  const [checkEndGame, setCheckEndGame] = useState(false);
+  const [checkEndGame, setCheckEndGame] = useState([false]);
   const [begin2048, setBegin2048] = useState(true); //set to false to choose between 2 games
   const [processKey, setProcessKey] = useState(false);
   const [score, setScore] = useState([0, 0]);
 
   //do not spawn new tiles if the move is illegal (i.e. all already at a side)
   const makeMoveUp = () => {
+    //check if an up move is a legal move
+    let legalUp = false;
+    for (let c = 0; c < boardSize; c++) {
+      for (let r = 0; r < boardSize; r++) {
+        let newY = c - 1;
+        if (newY < 0) {
+          continue;
+        } else if (
+          board[newY][r] === board[c][r] ||
+          board[newY][r] === undefined
+        )
+          legalUp = true; //a right move is legal
+      }
+    }
+    console.log("A right arrow move is: " + legalUp);
     //moves all tiles to the top where cols are rows and rows are cols
     for (let c = 0; c < boardSize; c++) {
       let column = board[c];
@@ -66,142 +82,193 @@ const TZFEGameboard = (Props) => {
   };
 
   const makeMoveDown = () => {
-    //moves all tiles to the bottom where cols are rows and rows are cols
+    //check if a down move is a legal move
+    let legalDown = false;
     for (let c = 0; c < boardSize; c++) {
-      let column = board[c];
-      //see which tiles can merge and move them to their new positions
-      var queue = [];
-      for (let v = boardSize - 1; v >= 0; v--) {
-        if (column[v] !== undefined) {
-          queue.push(column[v]);
-          column[v] = undefined;
-          setBoard([...board]);
-        }
+      for (let r = 0; r < boardSize; r++) {
+        let newY = c + 1;
+        if (newY >= boardSize) {
+          continue;
+        } else if (
+          board[newY][r] === board[c][r] ||
+          board[newY][r] === undefined
+        )
+          legalDown = true; //a right move is legal
       }
-      //add the items up and move the item to the bottom
-      let position = boardSize - 1;
-      let sum = 0;
-      let summed = 0;
-      while (queue.length !== 0) {
-        let currVal = queue.shift(); // shift to dequeue elements from the front
-        //only add values if they are the same
-        if (sum === 0) {
-          sum = currVal;
-          summed = 1;
-        } else if (sum === currVal) {
-          //add the 2 values and place them in their new positions
-          column[position] = sum + currVal;
-          computeScore(currVal);
-          setBoard([...board]);
-          sum = 0;
-          summed = 0;
-          position--;
-        } else {
-          //if value is different from the previous
+    }
+    console.log("A right arrow move is: " + legalDown);
+    if (legalDown) {
+      //moves all tiles to the bottom where cols are rows and rows are cols
+      for (let c = 0; c < boardSize; c++) {
+        let column = board[c];
+        //see which tiles can merge and move them to their new positions
+        var queue = [];
+        for (let v = boardSize - 1; v >= 0; v--) {
+          if (column[v] !== undefined) {
+            queue.push(column[v]);
+            column[v] = undefined;
+            setBoard([...board]);
+          }
+        }
+        //add the items up and move the item to the bottom
+        let position = boardSize - 1;
+        let sum = 0;
+        let summed = 0;
+        while (queue.length !== 0) {
+          let currVal = queue.shift(); // shift to dequeue elements from the front
+          //only add values if they are the same
+          if (sum === 0) {
+            sum = currVal;
+            summed = 1;
+          } else if (sum === currVal) {
+            //add the 2 values and place them in their new positions
+            column[position] = sum + currVal;
+            computeScore(currVal);
+            setBoard([...board]);
+            sum = 0;
+            summed = 0;
+            position--;
+          } else {
+            //if value is different from the previous
+            column[position] = sum;
+            setBoard([...board]);
+            sum = currVal;
+            summed = 1;
+            position--;
+          }
+        }
+        if (summed !== 0) {
           column[position] = sum;
           setBoard([...board]);
-          sum = currVal;
-          summed = 1;
-          position--;
         }
-      }
-      if (summed !== 0) {
-        column[position] = sum;
-        setBoard([...board]);
       }
     }
   };
 
   const makeMoveLeft = () => {
-    //moves all tiles to the left where cols are rows and rows are cols
-    for (let r = 0; r < boardSize; r++) {
-      //see which tiles can merge and move them to their new positions
-      var queue = [];
-      for (let v = 0; v < boardSize; v++) {
-        let tileItem = board[v][r];
-        if (tileItem !== undefined) {
-          queue.push(tileItem);
-          board[v][r] = undefined;
-          setBoard([...board]);
-        }
+    //check if a left move is a legal move
+    let legalLeft = false;
+    for (let c = 0; c < boardSize; c++) {
+      for (let r = 0; r < boardSize; r++) {
+        let newX = r + 1;
+        if (newX >= boardSize) {
+          continue;
+        } else if (
+          board[c][newX] === board[c][r] ||
+          board[c][newX] === undefined
+        )
+          legalLeft = true; //a right move is legal
       }
-      //add the items up and move the item to the right
-      let position = 0;
-      let sum = 0;
-      let summed = 0;
-      while (queue.length !== 0) {
-        let currVal = queue.shift(); // shift to dequeue elements from the front
-        //only add values if they are the same
-        if (sum === 0) {
-          sum = currVal;
-          summed = 1;
-        } else if (sum === currVal) {
-          //add the 2 values and place them in their new positions
-          board[position][r] = sum + currVal;
-          computeScore(currVal);
-          setBoard([...board]);
-          sum = 0;
-          summed = 0;
-          position++;
-        } else {
-          //if value is different from the previous
+    }
+    console.log("A right arrow move is: " + legalLeft);
+    if (legalLeft) {
+      //moves all tiles to the left where cols are rows and rows are cols
+      for (let r = 0; r < boardSize; r++) {
+        //see which tiles can merge and move them to their new positions
+        var queue = [];
+        for (let v = 0; v < boardSize; v++) {
+          let tileItem = board[v][r];
+          if (tileItem !== undefined) {
+            queue.push(tileItem);
+            board[v][r] = undefined;
+            setBoard([...board]);
+          }
+        }
+        //add the items up and move the item to the right
+        let position = 0;
+        let sum = 0;
+        let summed = 0;
+        while (queue.length !== 0) {
+          let currVal = queue.shift(); // shift to dequeue elements from the front
+          //only add values if they are the same
+          if (sum === 0) {
+            sum = currVal;
+            summed = 1;
+          } else if (sum === currVal) {
+            //add the 2 values and place them in their new positions
+            board[position][r] = sum + currVal;
+            computeScore(currVal);
+            setBoard([...board]);
+            sum = 0;
+            summed = 0;
+            position++;
+          } else {
+            //if value is different from the previous
+            board[position][r] = sum;
+            setBoard([...board]);
+            sum = currVal;
+            summed = 1;
+            position++;
+          }
+        }
+        if (summed !== 0) {
           board[position][r] = sum;
           setBoard([...board]);
-          sum = currVal;
-          summed = 1;
-          position++;
         }
-      }
-      if (summed !== 0) {
-        board[position][r] = sum;
-        setBoard([...board]);
       }
     }
   };
 
   const makeMoveRight = () => {
-    //moves all tiles to the right where cols are rows and rows are cols
-    for (let r = 0; r < boardSize; r++) {
-      //see which tiles can merge and move them to their new positions
-      var queue = [];
-      for (let v = boardSize - 1; v >= 0; v--) {
-        let tileItem = board[v][r];
-        if (tileItem !== undefined) {
-          queue.push(tileItem);
-          board[v][r] = undefined;
-          setBoard([...board]);
-        }
+    //check if a right move is a legal move
+    let legalRight = false;
+    for (let c = 0; c < boardSize; c++) {
+      for (let r = 0; r < boardSize; r++) {
+        let newX = r - 1;
+        if (newX < 0) {
+          continue;
+        } else if (
+          board[c][newX] === board[c][r] ||
+          board[c][newX] === undefined
+        )
+          legalRight = true; //a right move is legal
       }
-      //add the items up and move the item to the right
-      let position = boardSize - 1;
-      let sum = 0;
-      let summed = 0;
-      while (queue.length !== 0) {
-        let currVal = queue.shift(); // shift to dequeue elements from the front
-        //only add values if they are the same
-        if (sum === 0) {
-          sum = currVal;
-          summed = 1;
-        } else if (sum === currVal) {
-          //add the 2 values and place them in their new positions
-          board[position][r] = sum + currVal;
-          computeScore(currVal);
-          setBoard([...board]);
-          sum = 0;
-          summed = 0;
-          position--;
-        } else {
-          //if value is different from the previous
+    }
+    console.log("A right arrow move is: " + legalRight);
+    if (legalRight) {
+      //moves all tiles to the right where cols are rows and rows are cols
+      for (let r = 0; r < boardSize; r++) {
+        //see which tiles can merge and move them to their new positions
+        var queue = [];
+        for (let v = boardSize - 1; v >= 0; v--) {
+          let tileItem = board[v][r];
+          if (tileItem !== undefined) {
+            queue.push(tileItem);
+            board[v][r] = undefined;
+            setBoard([...board]);
+          }
+        }
+        //add the items up and move the item to the right
+        let position = boardSize - 1;
+        let sum = 0;
+        let summed = 0;
+        while (queue.length !== 0) {
+          let currVal = queue.shift(); // shift to dequeue elements from the front
+          //only add values if they are the same
+          if (sum === 0) {
+            sum = currVal;
+            summed = 1;
+          } else if (sum === currVal) {
+            //add the 2 values and place them in their new positions
+            board[position][r] = sum + currVal;
+            computeScore(currVal);
+            setBoard([...board]);
+            sum = 0;
+            summed = 0;
+            position--;
+          } else {
+            //if value is different from the previous
+            board[position][r] = sum;
+            setBoard([...board]);
+            sum = currVal;
+            summed = 1;
+            position--;
+          }
+        }
+        if (summed !== 0) {
           board[position][r] = sum;
           setBoard([...board]);
-          sum = currVal;
-          summed = 1;
-          position--;
         }
-      }
-      if (summed !== 0) {
-        board[position][r] = sum;
-        setBoard([...board]);
       }
     }
   };
@@ -214,7 +281,7 @@ const TZFEGameboard = (Props) => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (!checkEndGame && begin2048 && !processKey) {
+      if (!checkEndGame[0] && begin2048 && !processKey) {
         setProcessKey(true);
         if (
           e.key === "ArrowUp" ||
@@ -240,9 +307,6 @@ const TZFEGameboard = (Props) => {
     const handleKeyUp = (e) => {
       setProcessKey(false);
     };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
 
     let touchStartX;
     let touchStartY;
@@ -290,6 +354,9 @@ const TZFEGameboard = (Props) => {
       setBoard([...board]);
       checkGameEnd();
     };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
     document.addEventListener("touchstart", handleTouchStart);
     document.addEventListener("touchmove", handleTouchMove);
     document.addEventListener("touchend", handleTouchEnd);
@@ -312,6 +379,8 @@ const TZFEGameboard = (Props) => {
       roll = Math.round(Math.random() * boardSize ** 2);
       xIndex = Math.round(roll / boardSize) % boardSize;
       yIndex = roll % boardSize;
+      console.log("finding new tile");
+      if (checkEndGame[0]) break;
     }
     return { xIndex, yIndex };
   };
@@ -325,15 +394,31 @@ const TZFEGameboard = (Props) => {
 
   const checkGameEnd = () => {
     //checks if all tiles are filled
-    for (let tiles in board) {
-      for (let values in tiles) {
-        if (values === undefined) {
+    let inX = [0, 0, 1, -1];
+    let inY = [1, -1, 0, 0];
+    for (let c = 0; c < boardSize; c++) {
+      for (let r = 0; r < boardSize; r++) {
+        if (board[c][r] === undefined) {
           return;
+        } else {
+          for (let i = 0; i < 4; i++) {
+            let newX = c + inX[i];
+            let newY = r + inY[i];
+            if (
+              newX < 0 ||
+              newY < 0 ||
+              newX >= boardSize ||
+              newY >= boardSize
+            ) {
+              continue;
+            } else if (board[newX][newY] === board[c][r]) return; //game not over since we can combine
+          }
         }
       }
     }
-    setCheckEndGame(true);
-    return;
+    console.log("game over!");
+    checkEndGame[0] = true;
+    setCheckEndGame([...checkEndGame]);
   };
 
   return (
@@ -343,6 +428,16 @@ const TZFEGameboard = (Props) => {
           Score: {score[0]}
         </span>
         2048
+        {!checkEndGame ? (
+          <span className="">Game over! Your final score is: {score[0]}</span>
+        ) : (
+          <span className="flex flex-row scale-90 justify-evenly w-48">
+            <ArrowUp />
+            <ArrowLeft />
+            <ArrowDown />
+            <ArrowRight />
+          </span>
+        )}
         <span className="flex flex-row pt-2">
           {board.map((row, rowIndex) => {
             return (
