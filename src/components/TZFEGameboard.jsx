@@ -22,76 +22,84 @@ const TZFEGameboard = (Props) => {
   const makeMoveUp = () => {
     //check if an up move is a legal move
     let legalUp = false;
-    for (let c = 0; c < boardSize; c++) {
-      for (let r = 0; r < boardSize; r++) {
-        let newY = c - 1;
+    for (let r = 0; r < boardSize; r++) {
+      for (let c = 0; c < boardSize; c++) {
+        let newY = r - 1;
         if (newY < 0) {
           continue;
         } else if (
-          board[newY][r] === board[c][r] ||
-          board[newY][r] === undefined
+          board[c][newY] === board[c][r] ||
+          board[c][newY] === undefined
         )
           legalUp = true; //a right move is legal
       }
     }
     console.log("A right arrow move is: " + legalUp);
-    //moves all tiles to the top where cols are rows and rows are cols
-    for (let c = 0; c < boardSize; c++) {
-      let column = board[c];
-      //see which tiles can merge and move them to their new positions
-      var queue = [];
-      for (let v = 0; v < boardSize; v++) {
-        if (column[v] !== undefined) {
-          queue.push(column[v]);
-          column[v] = undefined;
-          setBoard([...board]);
+    if (legalUp) {
+      //moves all tiles to the top where cols are rows and rows are cols
+      for (let c = 0; c < boardSize; c++) {
+        let column = board[c];
+        //see which tiles can merge and move them to their new positions
+        var queue = [];
+        for (let v = 0; v < boardSize; v++) {
+          if (column[v] !== undefined) {
+            queue.push(column[v]);
+            column[v] = undefined;
+            setBoard([...board]);
+          }
         }
-      }
-      //add the items up and move the item to the top
-      let position = 0;
-      let sum = 0;
-      let summed = 0;
-      while (queue.length !== 0) {
-        let currVal = queue.shift(); // shift to dequeue elements from the front
-        //only add values if they are the same
-        if (sum === 0) {
-          sum = currVal;
-          summed = 1;
-        } else if (sum === currVal) {
-          //add the 2 values and place them in their new positions
-          column[position] = sum + currVal;
-          computeScore(currVal);
-          setBoard([...board]);
-          sum = 0;
-          summed = 0;
-          position++;
-        } else {
-          //if value is different from the previous
+        //add the items up and move the item to the top
+        let position = 0;
+        let sum = 0;
+        let summed = 0;
+        while (queue.length !== 0) {
+          let currVal = queue.shift(); // shift to dequeue elements from the front
+          //only add values if they are the same
+          if (sum === 0) {
+            sum = currVal;
+            summed = 1;
+          } else if (sum === currVal) {
+            //add the 2 values and place them in their new positions
+            column[position] = sum + currVal;
+            computeScore(currVal);
+            setBoard([...board]);
+            sum = 0;
+            summed = 0;
+            position++;
+          } else {
+            //if value is different from the previous
+            column[position] = sum;
+            setBoard([...board]);
+            sum = currVal;
+            summed = 1;
+            position++;
+          }
+        }
+        if (summed !== 0) {
           column[position] = sum;
           setBoard([...board]);
-          sum = currVal;
-          summed = 1;
-          position++;
         }
       }
-      if (summed !== 0) {
-        column[position] = sum;
-        setBoard([...board]);
-      }
+      const rowCol = chooseRandomBox();
+      const value = choose2or4();
+      //new object has to be created to trigger a re-render
+      board[rowCol.xIndex][rowCol.yIndex] = value;
+      setBoard([...board]);
+      checkGameEnd();
     }
   };
 
   const makeMoveDown = () => {
     //check if a down move is a legal move
     let legalDown = false;
-    for (let c = 0; c < boardSize; c++) {
-      for (let r = 0; r < boardSize; r++) {
-        let newY = c + 1;
+    for (let r = 0; r < boardSize; r++) {
+      for (let c = 0; c < boardSize; c++) {
+        let newY = r + 1;
         if (newY >= boardSize) {
           continue;
         } else if (
-          board[newY][r] === board[c][r] ||
-          board[newY][r] === undefined
+          board[c][newY] === board[c][r] ||
+          board[c][newY] === undefined
         )
           legalDown = true; //a right move is legal
       }
@@ -142,20 +150,26 @@ const TZFEGameboard = (Props) => {
           setBoard([...board]);
         }
       }
+      const rowCol = chooseRandomBox();
+      const value = choose2or4();
+      //new object has to be created to trigger a re-render
+      board[rowCol.xIndex][rowCol.yIndex] = value;
+      setBoard([...board]);
+      checkGameEnd();
     }
   };
 
   const makeMoveLeft = () => {
     //check if a left move is a legal move
     let legalLeft = false;
-    for (let c = 0; c < boardSize; c++) {
-      for (let r = 0; r < boardSize; r++) {
-        let newX = r + 1;
+    for (let r = 0; r < boardSize; r++) {
+      for (let c = 0; c < boardSize; c++) {
+        let newX = c + 1;
         if (newX >= boardSize) {
           continue;
         } else if (
-          board[c][newX] === board[c][r] ||
-          board[c][newX] === undefined
+          board[newX][r] === board[c][r] ||
+          board[newX][r] === undefined
         )
           legalLeft = true; //a right move is legal
       }
@@ -206,20 +220,26 @@ const TZFEGameboard = (Props) => {
           setBoard([...board]);
         }
       }
+      const rowCol = chooseRandomBox();
+      const value = choose2or4();
+      //new object has to be created to trigger a re-render
+      board[rowCol.xIndex][rowCol.yIndex] = value;
+      setBoard([...board]);
+      checkGameEnd();
     }
   };
 
   const makeMoveRight = () => {
     //check if a right move is a legal move
     let legalRight = false;
-    for (let c = 0; c < boardSize; c++) {
-      for (let r = 0; r < boardSize; r++) {
-        let newX = r - 1;
+    for (let r = 0; r < boardSize; r++) {
+      for (let c = 0; c < boardSize; c++) {
+        let newX = c - 1;
         if (newX < 0) {
           continue;
         } else if (
-          board[c][newX] === board[c][r] ||
-          board[c][newX] === undefined
+          board[newX][r] === board[c][r] ||
+          board[newX][r] === undefined
         )
           legalRight = true; //a right move is legal
       }
@@ -270,6 +290,12 @@ const TZFEGameboard = (Props) => {
           setBoard([...board]);
         }
       }
+      const rowCol = chooseRandomBox();
+      const value = choose2or4();
+      //new object has to be created to trigger a re-render
+      board[rowCol.xIndex][rowCol.yIndex] = value;
+      setBoard([...board]);
+      checkGameEnd();
     }
   };
 
@@ -294,12 +320,6 @@ const TZFEGameboard = (Props) => {
           else if (e.key === "ArrowDown") makeMoveDown();
           else if (e.key === "ArrowLeft") makeMoveLeft();
           else if (e.key === "ArrowRight") makeMoveRight();
-          const rowCol = chooseRandomBox();
-          const value = choose2or4();
-          //new object has to be created to trigger a re-render
-          board[rowCol.xIndex][rowCol.yIndex] = value;
-          setBoard([...board]);
-          checkGameEnd();
         }
       }
     };
