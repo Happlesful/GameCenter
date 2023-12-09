@@ -448,7 +448,7 @@ const TZFEGameboard = (Props) => {
           Score: {score[0]}
         </span>
         2048
-        {!checkEndGame ? (
+        {checkEndGame[0] ? (
           <span className="">Game over! Your final score is: {score[0]}</span>
         ) : (
           <span className="flex flex-row scale-90 justify-evenly w-48">
