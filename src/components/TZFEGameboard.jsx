@@ -391,17 +391,14 @@ const TZFEGameboard = (Props) => {
     let touchEndY;
 
     const handleTouchStart = (e) => {
-      e.preventDefault();
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
     };
     const handleTouchMove = (e) => {
-      e.preventDefault();
       touchEndX = e.touches[0].clientX;
       touchEndY = e.touches[0].clientY;
     };
     const handleTouchEnd = (e) => {
-      e.preventDefault();
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
       //compare the changes in delta to determine the intended move
