@@ -45,7 +45,7 @@ const TwoZeroFourEight = () => {
           ^Play by clicking on the arrow keys
         </p>
         <button
-          className="flex outline w-40 outline-2 items-center justify-center mt-2 rounded-md bg-indigo-200 text-slate-600 px-2 py-0.5 border-2 border-neutral-400 hover:bg-indigo-300 hover:border-neutral-500 hover:text-slate-900 hover:scale-105"
+          className="flex outline w-40 outline-2 items-center justify-center mt-2 rounded-md bg-indigo-200 text-slate-600 px-2 py-0.5 border-2 border-neutral-400 hover:animate-pulse duration-150"
           onClick={() => {
             setStartGame(false);
           }}
