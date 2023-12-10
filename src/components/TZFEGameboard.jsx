@@ -389,7 +389,7 @@ const TZFEGameboard = (Props) => {
     let touchStartY;
     let touchEndX;
     let touchEndY;
-    const swipeThreshold = 20;
+    const swipeThreshold = 50;
 
     const handleTouchStart = (e) => {
       touchStartX = e.touches[0].clientX;
