@@ -539,7 +539,6 @@ const TZFEGameboard = (Props) => {
                     <span
                       className="flex w-10 h-10 outline outline-1 outline-fuchsia-300 items-center justify-center"
                       key={colIndex}
-                      //add on arrowUp/Down/Left/Right
                     >
                       {item}
                     </span>
