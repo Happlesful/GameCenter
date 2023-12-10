@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { isEqual } from "lodash";
 
 //add glow upon clicking on the tile and red glow for not allowed
 
@@ -139,8 +140,15 @@ const TTTGameboard = (Props) => {
                   {row.map((item, colIndex) => {
                     return (
                       <span
-                        className="flex w-10 h-10 outline-purple-300 outline outline-1 justify-center items-center text-xs"
+                        className={`flex w-16 h-16 outline-purple-300 outline outline-1 justify-center items-center text-md ${
+                          isEqual(item, player1)
+                            ? "focus:ring-purple-300 focus:ring-2 bg-purple-500 bg-opacity-50"
+                            : isEqual(item, player2)
+                            ? "focus:ring-teal-300 focus:ring-2 bg-teal-500 bg-opacity-50"
+                            : ""
+                        }`}
                         key={colIndex}
+                        tabIndex="0"
                         onClick={() => makeMove(rowIndex, colIndex)}
                       >
                         {item}
