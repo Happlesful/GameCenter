@@ -417,10 +417,10 @@ const TZFEGameboard = (Props) => {
         //swiping vertically
         if (touchEndY > touchStartY) {
           //swipe up
-          makeMoveUp();
+          makeMoveDown();
         } else {
           //swipe down
-          makeMoveDown();
+          makeMoveUp();
         }
       }
       const rowCol = chooseRandomBox();
