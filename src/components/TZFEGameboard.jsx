@@ -389,8 +389,7 @@ const TZFEGameboard = (Props) => {
     let touchStartY;
     let touchEndX;
     let touchEndY;
-    const swipeThresholdX = 40;
-    const swipeThresholdY = 75;
+    const swipeThreshold = 20;
 
     const handleTouchStart = (e) => {
       touchStartX = e.touches[0].clientX;
@@ -404,8 +403,8 @@ const TZFEGameboard = (Props) => {
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
       if (
-        Math.abs(deltaX) < swipeThresholdX &&
-        Math.abs(deltaY) < swipeThresholdY
+        Math.abs(deltaX) < swipeThreshold &&
+        Math.abs(deltaY) < swipeThreshold
       )
         //for touching without swiping
         return;
