@@ -411,7 +411,7 @@ const TZFEGameboard = (Props) => {
           //swipe left
           makeMoveLeft();
         }
-      } else {
+      } else if (Math.abs(deltaX) < Math.abs(deltaY)) {
         //swiping vertically
         if (touchEndY > touchStartY) {
           //swipe up
@@ -420,7 +420,7 @@ const TZFEGameboard = (Props) => {
           //swipe down
           makeMoveUp();
         }
-      }
+      } else return;
       const rowCol = chooseRandomBox();
       const value = choose2or4();
       //new object has to be created to trigger a re-render
