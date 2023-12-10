@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, ArrowDown, ArrowUp } from "react-feather";
+import { isEqual } from "lodash";
 
 const createGameBoard = (size) => {
   const newBoard = [];
@@ -537,7 +538,31 @@ const TZFEGameboard = (Props) => {
                   //displays the number in the box here
                   return (
                     <span
-                      className="flex w-12 h-12 outline outline-1 outline-fuchsia-300 items-center justify-center text-xl"
+                      className={`flex w-12 h-12 outline outline-1 outline-fuchsia-300 items-center justify-center text-xl bg-opacity-50 ${
+                        isEqual(item, 2)
+                          ? "bg-red-500"
+                          : isEqual(item, 4)
+                          ? "bg-orange-400"
+                          : isEqual(item, 8)
+                          ? "bg-yellow-400"
+                          : isEqual(item, 16)
+                          ? "bg-orange-400"
+                          : isEqual(item, 32)
+                          ? "bg-blue-400"
+                          : isEqual(item, 64)
+                          ? "bg-lime-400"
+                          : isEqual(item, 128)
+                          ? "bg-cyan-400"
+                          : isEqual(item, 256)
+                          ? "bg-purple-400"
+                          : isEqual(item, 512)
+                          ? "bg-indigo-400"
+                          : isEqual(item, 1024)
+                          ? "bg-rose-400 bg-"
+                          : isEqual(item, 2048)
+                          ? "bg-fuchsia-400"
+                          : ""
+                      }`}
                       key={colIndex}
                     >
                       {item}
