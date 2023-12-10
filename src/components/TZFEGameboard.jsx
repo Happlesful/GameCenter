@@ -335,13 +335,13 @@ const TZFEGameboard = (Props) => {
 
     const handleTouchStart = (e) => {
       e.preventDefault();
-      touchStartX = e.touches[0].cilentX;
-      touchStartY = e.touches[0].cilentY;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
     };
     const handleTouchMove = (e) => {
       e.preventDefault();
-      touchEndX = e.touches[0].cilentX;
-      touchEndY = e.touches[0].cilentY;
+      touchEndX = e.touches[0].clientX;
+      touchEndY = e.touches[0].clientY;
     };
     const handleTouchEnd = (e) => {
       e.preventDefault();
