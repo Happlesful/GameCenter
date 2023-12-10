@@ -537,7 +537,7 @@ const TZFEGameboard = (Props) => {
                   //displays the number in the box here
                   return (
                     <span
-                      className="flex w-10 h-10 outline outline-1 outline-fuchsia-300 items-center justify-center"
+                      className="flex w-12 h-12 outline outline-1 outline-fuchsia-300 items-center justify-center text-xl"
                       key={colIndex}
                     >
                       {item}
