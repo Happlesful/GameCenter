@@ -16,25 +16,39 @@ const TZFEGameboard = (Props) => {
   const [checkEndGame, setCheckEndGame] = useState([false]);
   const [begin2048, setBegin2048] = useState(true); //set to false to choose between 2 games
   const [processKey, setProcessKey] = useState(false);
-  const [score, setScore] = useState([0, 0]);
+  const [score, setScore] = useState([0]);
+  const [initialised, setInitialised] = useState(false);
 
   //do not spawn new tiles if the move is illegal (i.e. all already at a side)
   const makeMoveUp = () => {
     //check if an up move is a legal move
     let legalUp = false;
+    const colChecker = Array(boardSize);
+    colChecker.fill(true); //used to check if there are any gaps towards the direction of move
     for (let r = 0; r < boardSize; r++) {
       for (let c = 0; c < boardSize; c++) {
-        let newY = r - 1;
-        if (newY < 0) {
+        //board[r][c] checks down each col
+        let newY = c - 1;
+        if (!colChecker[r] && board[r][c] !== undefined) {
+          //if colChecker is false (there is a gap to the next tile)
+          //a move up is legal
+          colChecker[r] = true;
+          legalUp = true;
+          break;
+        } else if (board[r][c] === undefined) {
+          //when there is a gap
+          colChecker[r] = false;
           continue;
-        } else if (
-          board[c][newY] === board[c][r] ||
-          board[c][newY] === undefined
-        )
-          legalUp = true; //a right move is legal
+        } else if (newY < 0) {
+          continue;
+        } else if (board[r][newY] === board[r][c]) {
+          legalUp = true; //a move up is legal
+          break;
+        }
       }
+      if (legalUp) break;
     }
-    console.log("A right arrow move is: " + legalUp);
+    console.log("An up arrow move is: " + legalUp);
     if (legalUp) {
       //moves all tiles to the top where cols are rows and rows are cols
       for (let c = 0; c < boardSize; c++) {
@@ -92,19 +106,32 @@ const TZFEGameboard = (Props) => {
   const makeMoveDown = () => {
     //check if a down move is a legal move
     let legalDown = false;
+    const colChecker = Array(boardSize);
+    colChecker.fill(true); //used to check if there are any gaps towards the direction of move
     for (let r = 0; r < boardSize; r++) {
-      for (let c = 0; c < boardSize; c++) {
-        let newY = r + 1;
-        if (newY >= boardSize) {
+      for (let c = boardSize - 1; c >= 0; c--) {
+        //board[r][c] checks up each col
+        let newY = c + 1;
+        if (!colChecker[r] && board[r][c] !== undefined) {
+          //if colChecker is false (there is a gap to the next tile)
+          //a move down is legal
+          colChecker[r] = true;
+          legalDown = true;
+          break;
+        } else if (board[r][c] === undefined) {
+          //when there is a gap
+          colChecker[r] = false;
           continue;
-        } else if (
-          board[c][newY] === board[c][r] ||
-          board[c][newY] === undefined
-        )
+        } else if (newY >= boardSize) {
+          continue;
+        } else if (board[r][newY] === board[r][c]) {
           legalDown = true; //a right move is legal
+          break;
+        }
       }
+      if (legalDown) break;
     }
-    console.log("A right arrow move is: " + legalDown);
+    console.log("A down arrow move is: " + legalDown);
     if (legalDown) {
       //moves all tiles to the bottom where cols are rows and rows are cols
       for (let c = 0; c < boardSize; c++) {
@@ -162,19 +189,32 @@ const TZFEGameboard = (Props) => {
   const makeMoveLeft = () => {
     //check if a left move is a legal move
     let legalLeft = false;
+    const rowChecker = Array(boardSize);
+    rowChecker.fill(true); //used to check if there are any gaps towards the direction of move
     for (let r = 0; r < boardSize; r++) {
       for (let c = 0; c < boardSize; c++) {
+        //board[c][r] checks down each row
         let newX = c + 1;
-        if (newX >= boardSize) {
+        if (!rowChecker[r] && board[c][r] !== undefined) {
+          //if rowChecker is false (there is a gap to the next tile)
+          //a move left is legal
+          rowChecker[r] = true;
+          legalLeft = true;
+          break;
+        } else if (board[c][r] === undefined) {
+          //when there is a gap
+          rowChecker[r] = false;
           continue;
-        } else if (
-          board[newX][r] === board[c][r] ||
-          board[newX][r] === undefined
-        )
+        } else if (newX >= boardSize) {
+          continue;
+        } else if (board[newX][r] === board[c][r]) {
           legalLeft = true; //a right move is legal
+          break;
+        }
       }
+      if (legalLeft) break;
     }
-    console.log("A right arrow move is: " + legalLeft);
+    console.log("A left arrow move is: " + legalLeft);
     if (legalLeft) {
       //moves all tiles to the left where cols are rows and rows are cols
       for (let r = 0; r < boardSize; r++) {
@@ -232,17 +272,33 @@ const TZFEGameboard = (Props) => {
   const makeMoveRight = () => {
     //check if a right move is a legal move
     let legalRight = false;
+    const rowChecker = Array(boardSize);
+    rowChecker.fill(true); //used to check if there are any gaps towards the direction of move
     for (let r = 0; r < boardSize; r++) {
       for (let c = 0; c < boardSize; c++) {
+        //board[c][r] checks down each row
         let newX = c - 1;
-        if (newX < 0) {
+        if (!rowChecker[r] && board[c][r] !== undefined) {
+          //if rowChecker is false (there is a gap to the next tile)
+          //a move left is legal
+          rowChecker[r] = true;
+          legalRight = true;
+          break;
+        } else if (board[c][r] === undefined) {
+          //when there is a gap
+          rowChecker[r] = false;
+          continue;
+        } else if (newX < 0) {
           continue;
         } else if (
           board[newX][r] === board[c][r] ||
           board[newX][r] === undefined
-        )
+        ) {
           legalRight = true; //a right move is legal
+          break;
+        }
       }
+      if (legalRight) break;
     }
     console.log("A right arrow move is: " + legalRight);
     if (legalRight) {
@@ -396,11 +452,11 @@ const TZFEGameboard = (Props) => {
     let xIndex = Math.round(roll / boardSize) % boardSize;
     let yIndex = roll % boardSize;
     while (board[xIndex][yIndex] !== undefined) {
+      if (checkEndGame[0]) break;
       roll = Math.round(Math.random() * boardSize ** 2);
       xIndex = Math.round(roll / boardSize) % boardSize;
       yIndex = roll % boardSize;
       console.log("finding new tile");
-      if (checkEndGame[0]) break;
     }
     return { xIndex, yIndex };
   };
@@ -440,6 +496,21 @@ const TZFEGameboard = (Props) => {
     checkEndGame[0] = true;
     setCheckEndGame([...checkEndGame]);
   };
+
+  const initialisatedTile = () => {
+    //initialise the first tile on load
+    const rowCol = chooseRandomBox();
+    const value = choose2or4();
+    //new object has to be created to trigger a re-render
+    board[rowCol.xIndex][rowCol.yIndex] = value;
+    setBoard([...board]);
+    console.log("Setting up item");
+  };
+
+  if (!initialised) {
+    initialisatedTile();
+    setInitialised(true);
+  }
 
   return (
     <div>
