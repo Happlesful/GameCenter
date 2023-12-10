@@ -389,6 +389,7 @@ const TZFEGameboard = (Props) => {
     let touchStartY;
     let touchEndX;
     let touchEndY;
+    const swipeThreshold = 20;
 
     const handleTouchStart = (e) => {
       touchStartX = e.touches[0].clientX;
@@ -401,6 +402,12 @@ const TZFEGameboard = (Props) => {
     const handleTouchEnd = (e) => {
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
+      if (
+        Math.abs(deltaX) < swipeThreshold &&
+        Math.abs(deltaY) < swipeThreshold
+      )
+        //for touching without swiping
+        return;
       //compare the changes in delta to determine the intended move
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         //swiping horizontally
@@ -420,7 +427,7 @@ const TZFEGameboard = (Props) => {
           //swipe down
           makeMoveUp();
         }
-      } else return;
+      }
       const rowCol = chooseRandomBox();
       const value = choose2or4();
       //new object has to be created to trigger a re-render
