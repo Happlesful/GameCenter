@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { TwoZeroFourEight, TicTacToe } from "./index";
+import { TwoZeroFourEight, TicTacToe, Airplane } from "./index";
 
 const Games = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [playTTT, setPlayTTT] = useState(false);
   const [playTZFE, setPlayTZFE] = useState(false);
+  const [playAirplane, setPlayAirplane] = useState(false);
   const TTT = (
     <div>
       <span className="flex flex-col items-center justify-center">
@@ -14,6 +15,7 @@ const Games = () => {
             setShowMenu(true);
             setPlayTTT(false);
             setPlayTZFE(false);
+            setPlayAirplane(false);
           }}
         >
           Back to main menu
@@ -33,12 +35,33 @@ const Games = () => {
             setShowMenu(true);
             setPlayTTT(false);
             setPlayTZFE(false);
+            setPlayAirplane(false);
           }}
         >
           Back to main menu
         </button>
         <span className="flex flex-col items-center justify-center">
           <TwoZeroFourEight />
+        </span>
+      </span>
+    </div>
+  );
+  const AP = (
+    <div>
+      <span className="flex flex-col items-center justify-center">
+        <button
+          className="outline outline-2 rounded-sm mb-3 px-3 bg-indigo-400 text-cyan-100 hover:bg-indigo-600 hover:text-cyan-100"
+          onClick={() => {
+            setShowMenu(true);
+            setPlayTTT(false);
+            setPlayTZFE(false);
+            setPlayAirplane(false);
+          }}
+        >
+          Back to main menu
+        </button>
+        <span className="flex flex-col items-center justify-center">
+          <Airplane />
         </span>
       </span>
     </div>
@@ -67,6 +90,15 @@ const Games = () => {
           >
             2048
           </button>
+          <button
+            className="border w-40 hover:text-slate-100 hover:bg-emerald-800"
+            onClick={() => {
+              setPlayAirplane(true);
+              setShowMenu(false);
+            }}
+          >
+            Airplane
+          </button>
         </span>
       </section>
     </div>
@@ -74,7 +106,7 @@ const Games = () => {
   return (
     <div>
       <span className="flex flex-col items-center justify-center">
-        {showMenu ? mainMenu : playTTT ? TTT : TZFE}
+        {showMenu ? mainMenu : playTTT ? TTT : playTZFE ? TZFE : AP}
       </span>
     </div>
   );
